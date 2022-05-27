@@ -1,9 +1,13 @@
 import { Dialute, SberRequest } from 'dialute';
+import { data } from './data';
 
-const fs = require("fs");
 
-const rawData = fs.readFileSync("places.json");
-const places = JSON.parse(rawData);
+//const fs = require("fs");
+
+//const rawData = fs.readFileSync("places.json");
+//const places = JSON.parse(rawData);
+
+const places = data;
 
 
 function choice(choices: any, drop = false) {
