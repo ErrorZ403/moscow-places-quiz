@@ -28,11 +28,13 @@ function shuffle(array: any[]) {
 
 function* script(r: SberRequest) {
   const rsp = r.buildRsp();
+  
   let unusedPlaces = [...places];
   const state = {
     count: 0,
     place: {name: '', iso: ''},
-    variants: [] as any[]
+    variants: [] as any[],
+    lifes: 3
   }
 
   function updateState() {
@@ -59,6 +61,19 @@ function* script(r: SberRequest) {
     rsp.data = state;
   }
 
+  function newGame(){
+    unusedPlaces = [...places];
+    state.count = 0;
+    state.place = {name: '', iso: ''};
+    state.variants = [] as any[];
+    state.lifes = 3;
+  }
+
+  function loseGame(){
+    rsp.msg = 'К сожалению, вы проиграли. Вы можете начать заново, сказав "Заново"';
+    rsp.msgJ = 'Эх, ты проиграл. Ты можешь начать заново, сказав "Заново"'
+  }
+
   function useButton(place: any) {
     for (const [i, v] of state.variants.entries()) {
       if (place.toLowerCase() === v.name.toLowerCase()) {
@@ -71,6 +86,7 @@ function* script(r: SberRequest) {
     updateState();
     state.count++;
     rsp.msg = choice(['Правильно!', 'Здорово!', 'Потрясающе!', 'Угадали!', 'Браво!', 'Вы молодец!']);
+    rsp.msgJ = choice(['Правильно!', 'Здорово!', 'Потрясающе!', 'Верно!', 'Браво!', 'Молодец!']);
   }
 
   function afterWrong(useButtons = true){
@@ -84,12 +100,20 @@ function* script(r: SberRequest) {
       }
     }
     rsp.msg = choice(['Не угадали!', 'Неверно!', 'Неправильно!']);
+    rsp.msgJ = choice(['Не угадал!', 'Неверно!', 'Неправильно!']);
+    state.lifes -= 1;
+    if (state.lifes <= 0){
+      loseGame();
+    }
   }
 
   updateState();
   rsp.msg = 'Добро пожаловать в игру Угадай место. Вам будут показаны фотографии различных мест Москвы. ' +
     'Вы должны угадать место. Если возникнут вопросы, скажите Помощь. ' +
     'Вопросы можно пропускать, сказав Далее. А вот и первое место';
+  rsp.msgJ = 'Привет! Ты в игре Угадай место. Тебе будут показаны фотографии различных мест Москвы. ' +
+    'Ты должен угадать место. Если возникнут вопросы, скажи Помощь. ' +
+    'Вопросы можно пропускать, сказав Далее. А вот и первый место.';
   yield rsp;
 
   while (unusedPlaces.length > 0){
@@ -108,20 +132,36 @@ function* script(r: SberRequest) {
     if (r.msg.toString().replace(/-/g, ' ').toLowerCase() === state.place.name.toString().replace(/-/g, ' ').toLowerCase()) {
       afterCorrect();
     }
-    // else if (r.nlu.lemmaIntersection(['выход', 'выйти', 'выйди'])) {
-    //   rsp.msg = 'Всего вам доброго!'
-    //   rsp.end = true;
-    //   rsp.data = {'type': 'close_app'}
-    // }
+    else if (r.nlu.lemmaIntersection(['выход', 'выйти', 'выйди'])) {
+      rsp.msg = 'Всего вам доброго!'
+      rsp.msgJ = 'Еще увидимся. Пока!'
+      rsp.end = true;
+      rsp.data = {'type': 'close_app'}
+    }
 
     else if (r.nlu.lemmaIntersection(['помощь', 'помочь'])) {
       rsp.msg = 'Добро пожаловать в игру Угадай место. Вам будут показаны фотографии различных мест Москвы. ' +
       'Вы должны угадать место. Если возникнут вопросы, скажите Помощь. ' +
-      'Вопросы можно пропускать, сказав Далее.';
+      'Вопросы можно пропускать, сказав Далее, но Вы потеряете жизнь.';
+      rsp.msgJ = 'Привет! Ты в игре Угадай место. Тебе будут показаны фотографии различных мест Москвы. ' +
+      'Ты должен угадать место. Если возникнут вопросы, скажи Помощь. ' +
+      'Вопросы можно пропускать, сказав Далее, но ты потеряешь жизнь.';
     }
     else if (r.nlu.lemmaIntersection(['следующий', 'далее']) || ['далее', 'следующий'].includes(r.msg.toLowerCase())) {
+      state.lifes -= 1;
       updateState();
       rsp.msg = 'Обновляю'
+    }
+    else if (r.nlu.lemmaIntersection(['заново', 'начать заново', 'новая'])){
+      newGame();
+      updateState();
+          
+      rsp.msg = 'Добро пожаловать в игру Угадай место. Вам будут показаны фотографии различных мест Москвы. ' +
+      'Вы должны угадать место. Если возникнут вопросы, скажите Помощь. ' +
+      'Вопросы можно пропускать, сказав Далее. А вот и первое место';
+      rsp.msgJ = 'Привет! Ты в игре Угадай место. Тебе будут показаны фотографии различных мест Москвы. ' +
+      'Ты должен угадать место. Если возникнут вопросы, скажи Помощь. ' +
+      'Вопросы можно пропускать, сказав Далее. А вот и первый место.';
     }
     else{
       afterWrong();
@@ -129,8 +169,9 @@ function* script(r: SberRequest) {
     yield rsp;
   }
   rsp.msg = 'Поздравляю! Вы знаете все места Москвы!'
-  rsp.data = {'type': 'close_app'}
-  rsp.end = true;
+  rsp.msgJ = 'Поздравляю! Ты знаешь все места Москвы!'
+  //rsp.data = {'type': 'close_app'}
+  //rsp.end = true;
   yield rsp;
 }
 
