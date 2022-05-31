@@ -71,7 +71,8 @@ function* script(r: SberRequest) {
 
   function loseGame(){
     rsp.msg = 'К сожалению, вы проиграли. Вы можете начать заново, сказав "Заново"';
-    rsp.msgJ = 'Эх, ты проиграл. Ты можешь начать заново, сказав "Заново"'
+    rsp.msgJ = 'Эх, ты проиграл. Ты можешь начать заново, сказав "Заново"';
+    rsp.end = true;
   }
 
   function useButton(place: any) {
@@ -171,7 +172,7 @@ function* script(r: SberRequest) {
   rsp.msg = 'Поздравляю! Вы знаете все места Москвы!'
   rsp.msgJ = 'Поздравляю! Ты знаешь все места Москвы!'
   //rsp.data = {'type': 'close_app'}
-  //rsp.end = true;
+  rsp.end = true;
   yield rsp;
 }
 
