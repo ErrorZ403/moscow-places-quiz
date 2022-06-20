@@ -13,10 +13,12 @@
       {name: 'Место 2', used: false},
       {name: 'Место 3', used: false},
       {name: 'Место 4', used: false}
-    ]
+    ],
+    lifes: 3,
+    endGame: false
   };
 
-  let token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZTcyYzg4MTkyOTlhODAzZDJhYjNiMzBkZjNjNTgwYmJmYzAwMjk0ODk1NGQ3NjVhNmRiZWE1MmQyZTUxNjg1NTM5YmU5MjcwMDQyNjI5OCIsImF1ZCI6IlZQUyIsImV4cCI6MTY1MzY0MDExMywiaWF0IjoxNjUzNTUzNzAzLCJpc3MiOiJLRVlNQVNURVIiLCJ0eXBlIjoiQmVhcmVyIiwianRpIjoiMzZkZjcwN2MtNGYwZS00YjJjLWJmMDEtNGE1MmRmYjJiNjU0Iiwic2lkIjoiMTY2Mzc2MWYtY2E3Yy00NmI3LWIwN2EtNDhhYzE4MzA1ZDYyIn0.SJSwGzzQgM2oG_rd1_sxYTxPFKpR4UzHdB8nSDWPD4i3YzLsiPmc1rOOo9WT6mjaOLxxUtudaem7n9m2FIDn5drkCavC6vza0NAIwL-ea6j2LUx5iS5iGeenJC1C3MwflG-NCoDijm-GdIFZwf45tVFGkL9sDN2DgYs-VmBLpDX447x3c7ck1BnvVxhgvGUNf0LiTaT6thOm2LNhq-aoKOzsNDcfTmYIt4qlK38ARHWfWUCmiVo_w-pY2FVQdkLcKxDmg2CC5sYEgQM6uXMJTU3dAAVwCdwpoeAOzZ9REzyHehXkqDYItL7NHxxTNcPB0HIawaEiHcNv-Gk5z2YLMBa4yySoMNJNz2Tt2prXnvZuHWJzCLr6mvmRPkyj6HwFwzTvvXoh4ZnvhapSxQP549eksq9o4V41zauSiOMWRNGub6TtWob6_3YRvfnLw-7Que7X1KBJd483YBlYB7QLOSzUTAU55S_jfVaYJzcujN8-ZsJ2ijnRry87ACSNhiQi7_zRid3gI8OEZhXQhH9pQ1BxygoOUVHMrLdB3lF8Pf2pJy7-wqKpGYEsB3dFJntMmtgth_fSR609v_hyThW31xeAT5qGFTqJaIx7iEpcOJNEB40G0UYwb-hL2Bn9-xDUqt0VaXElWYiprRWOSBO-RRYgF4ANIfnJB46fQfneDEM'
+  //let token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZTcyYzg4MTkyOTlhODAzZDJhYjNiMzBkZjNjNTgwYmJmYzAwMjk0ODk1NGQ3NjVhNmRiZWE1MmQyZTUxNjg1NTM5YmU5MjcwMDQyNjI5OCIsImF1ZCI6IlZQUyIsImV4cCI6MTY1MzY0MDExMywiaWF0IjoxNjUzNTUzNzAzLCJpc3MiOiJLRVlNQVNURVIiLCJ0eXBlIjoiQmVhcmVyIiwianRpIjoiMzZkZjcwN2MtNGYwZS00YjJjLWJmMDEtNGE1MmRmYjJiNjU0Iiwic2lkIjoiMTY2Mzc2MWYtY2E3Yy00NmI3LWIwN2EtNDhhYzE4MzA1ZDYyIn0.SJSwGzzQgM2oG_rd1_sxYTxPFKpR4UzHdB8nSDWPD4i3YzLsiPmc1rOOo9WT6mjaOLxxUtudaem7n9m2FIDn5drkCavC6vza0NAIwL-ea6j2LUx5iS5iGeenJC1C3MwflG-NCoDijm-GdIFZwf45tVFGkL9sDN2DgYs-VmBLpDX447x3c7ck1BnvVxhgvGUNf0LiTaT6thOm2LNhq-aoKOzsNDcfTmYIt4qlK38ARHWfWUCmiVo_w-pY2FVQdkLcKxDmg2CC5sYEgQM6uXMJTU3dAAVwCdwpoeAOzZ9REzyHehXkqDYItL7NHxxTNcPB0HIawaEiHcNv-Gk5z2YLMBa4yySoMNJNz2Tt2prXnvZuHWJzCLr6mvmRPkyj6HwFwzTvvXoh4ZnvhapSxQP549eksq9o4V41zauSiOMWRNGub6TtWob6_3YRvfnLw-7Que7X1KBJd483YBlYB7QLOSzUTAU55S_jfVaYJzcujN8-ZsJ2ijnRry87ACSNhiQi7_zRid3gI8OEZhXQhH9pQ1BxygoOUVHMrLdB3lF8Pf2pJy7-wqKpGYEsB3dFJntMmtgth_fSR609v_hyThW31xeAT5qGFTqJaIx7iEpcOJNEB40G0UYwb-hL2Bn9-xDUqt0VaXElWYiprRWOSBO-RRYgF4ANIfnJB46fQfneDEM'
   let initPhrase = 'запусти Угадай место';
 
   let character = 'eva';
@@ -30,12 +32,12 @@
     }
 
     const init = () => {
-      return createSmartappDebugger({
-        token,
-        initPhrase,
-        getState,
-      });
-      //return createAssistant({getState});
+      // return createSmartappDebugger({
+      //   token,
+      //   initPhrase,
+      //   getState,
+      // });
+      return createAssistant({getState});
     };
     assistant = init();
 
@@ -65,6 +67,9 @@
   });
 
   function handleClick(i) {
+    if (state.endGame){
+      return;
+    }
     if (state.variants[i].name !== state.place.name) {
       state.variants[i].used = true;
     }
@@ -80,6 +85,7 @@
 <main>
   <div class="card">
     <h2>Счет: {state.count}</h2>
+    <h2>Жизней: {state.lifes}</h2>
       <!-- svelte-ignore a11y-missing-attribute -->
       <img src="/photos/{state.place.iso}.jpg" />
       <div class="buttons">
@@ -110,7 +116,7 @@
     box-shadow: 0 0 30px 1px rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     padding: 30px 10px;
-    width: 80vw;
+    width: 100vw;
     max-width: 1000px;
     display: flex;
     align-items: center;
